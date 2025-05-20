@@ -122,14 +122,16 @@ Think Time = 5000ms
 
 - **Причина**: Рабочие процессы PostgreSQL (`max_worker_processes=4`) полностью используют ресурсы ЦП при 6 vCPU, а дополнительные ядра дают минимальный прирост.
 
-  ![image-20250515203226713](/Users/kankan/Library/Application Support/typora-user-images/image-20250515203226713.png)
+  <img width="809" alt="image" src="https://github.com/user-attachments/assets/665aaac6-0f16-4d3c-9906-936730cb2edb" />
+
 
 **Рисунок 2: Влияние RAM на TPM и NOPM**
 - **Тенденция**: TPM вырос с 141,328 (2 ГБ) до 183,403 (4 ГБ) на 29.8%, что свидетельствует об устранении узкого места кэширования. От 4 ГБ до 8 ГБ прирост составил 7.3% (196,814), а от 8 ГБ до 16 ГБ — всего 0.7% (198,207), что подтверждает 8 ГБ как точку насыщения памяти.
 
 - **Причина**: Объем 8 ГБ полностью удовлетворяет настройки `shared_buffers` (2 ГБ) и `effective_cache_size` (3 ГБ), а дополнительная память (16 ГБ) остается неиспользованной.
 
-  ![image-20250515203253931](/Users/kankan/Library/Application Support/typora-user-images/image-20250515203253931.png)
+  <img width="849" alt="image" src="https://github.com/user-attachments/assets/fa14de3b-52d3-4435-8cbc-d966804a0e6f" />
+
 
 **Рисунок 3: Сравнение TPM для vCPU и RAM**
 
@@ -137,7 +139,7 @@ Think Time = 5000ms
 
 - **Причина**: Память напрямую влияет на частоту попаданий в кэш базы данных, тогда как ЦП ограничен количеством рабочих процессов.
 
-  ![image-20250515203332234](/Users/kankan/Library/Application Support/typora-user-images/image-20250515203332234.png)
+  <img width="829" alt="image" src="https://github.com/user-attachments/assets/885dddeb-a52a-405a-9047-52ddc35e2cdc" />
 
   
 
@@ -146,7 +148,8 @@ Think Time = 5000ms
 
 - **Причина**: NOPM больше зависит от эффективности обработки транзакций, где влияние памяти и ЦП сбалансировано.
 
-  ![image-20250515203356865](/Users/kankan/Library/Application Support/typora-user-images/image-20250515203356865.png)
+  <img width="840" alt="image" src="https://github.com/user-attachments/assets/1b7d54fe-bbaf-4ecc-b38f-558fcf0e81b4" />
+
 
 ### 4.2 Анализ узких мест
 - **Узкое место ЦП**: При 2 vCPU использование ЦП на уровне 96.2% ограничивает параллельную обработку транзакций. Конфигурации с 6–8 vCPU устраняют это ограничение, но прирост производительности замедляется. Рекомендуется оптимизировать `max_parallel_workers_per_gather` для более эффективного использования многоядерных систем.
